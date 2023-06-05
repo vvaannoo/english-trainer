@@ -12,7 +12,7 @@ function App() {
     loadCsv().catch(console.error);
 
     async function loadCsv() {
-      const res = await fetch('/data.csv?v=1.0');
+      const res = await fetch('./data.csv?v=1.0');
       const csv = await res.text();
       const parsed = Papa.parse(csv, {
         delimiter: ',',

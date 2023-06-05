@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  caddy:
+    container_name: english-trainer-caddy
+    image: caddy:2.6.3-alpine
+    restart: unless-stopped
+    ports:
+      - "88:80"
+    volumes:
+      - ./build:/opt/app
+    command: caddy file-server --root /opt/app --listen :80
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "1"

@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 
+const version = '1.1';
 const Papa = require('papaparse');
 
 function App() {
@@ -12,7 +13,7 @@ function App() {
     loadCsv().catch(console.error);
 
     async function loadCsv() {
-      const res = await fetch('./data.csv?v=1.0');
+      const res = await fetch(`./data.csv?v=${version}`);
       const csv = await res.text();
       const parsed = Papa.parse(csv, {
         delimiter: ',',
@@ -47,7 +48,7 @@ function App() {
 
   return (
       <div style={{padding: '2rem'}}>
-        <button style={{padding: '1rem 4rem', marginBottom: '1rem'}}
+        <button className="main-btn"
                 onClick={next}>
           {
             !current ? 'Start' : shown ? 'Next' : 'Show Translation'

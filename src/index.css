@@ -44,6 +44,7 @@ hr {
 }
 
 .main-btn {
+    margin-top: 1rem;
     padding: 1rem 4rem;
     margin-bottom: 1rem;
 }
@@ -59,3 +60,14 @@ hr {
         margin: 3rem auto;
     }
 }
+
+.sources {
+    display:flex;
+}
+
+.source-checkbox {
+    display: flex;
+    margin-right: 1rem;
+}
+
+

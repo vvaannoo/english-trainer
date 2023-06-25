@@ -1,10 +1,13 @@
 import {useEffect, useState} from 'react';
 
-const version = '1.1';
+const version = '2.0';
 const Papa = require('papaparse');
 
 function App() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
+  const [filtered, setFiltered] = useState({});
+  const [sources, setSources] = useState({});
+  const [selectedSources, setSelectedSources] = useState([]);
   const [current, setCurrent] = useState(null);
   const [shown, setShown] = useState(false);
 
@@ -20,34 +23,88 @@ function App() {
         // header: true,
         worker: false,
       });
-      const map = parsed.data.slice(1).reduce((acc, [eng, geo, comment]) => {
-        if (eng && geo) {
-          if (!acc[geo]) {
-            acc[geo] = [];
-          }
-          acc[geo].push({eng, geo, comment});
-        }
-        return acc;
-      }, {});
-      setData(map);
+      const data = parsed.data.slice(1);
+      setData(data);
+      const sources = extractSources(data);
+      setSources(sources);
+      setSelectedSources(Object.keys(sources));
     }
   }, []);
+
+  useEffect(() => {
+    filterData(data, selectedSources);
+  }, [selectedSources, data])
+
+  function extractSources(data) {
+    const sources = {}
+    data.forEach(([, , , source]) => {
+      const safeSource = getSafeSource(source);
+      if(!(safeSource in sources)) {
+        sources[safeSource] = 0;
+      }
+      sources[safeSource]++;
+    });
+    return sources;
+  }
+
+  function filterData(data, selectedSources) {
+    if(!selectedSources.length) {
+      selectedSources = sources;
+    }
+    const map = data.reduce((acc, [eng, geo, comment, source]) => {
+      if (!selectedSources.includes(getSafeSource(source))) {
+        return acc;
+      }
+      if (eng && geo) {
+        if (!acc[geo]) {
+          acc[geo] = [];
+        }
+        acc[geo].push({eng, geo, comment, source: getSafeSource(source)});
+      }
+      return acc;
+    }, {});
+    setFiltered(map);
+  }
+
+  function getSafeSource(source) {
+    return source || 'vano';
+  }
 
   const next = () => {
     if (!shown && current) {
       setShown(true);
       return;
     }
-    const keys = Object.keys(data);
+    const keys = Object.keys(filtered);
     const size = keys.length;
     const index = Math.floor(Math.random() * size);
     const geo = keys[index];
-    setCurrent(data[geo]);
+    setCurrent(filtered[geo]);
     setShown(false);
   };
 
+  const sourceChangeHandler = (event) => {
+    const {name: source, checked} = event.target;
+    if (checked) {
+      setSelectedSources([...selectedSources, source]);
+    } else {
+      setSelectedSources(selectedSources.filter(s => s !== source));
+    }
+  }
+
   return (
       <div style={{padding: '2rem'}}>
+        <div className="sources">
+          {Object.entries(sources).map(([source, count]) => (
+              <label key={source} className="source-checkbox">
+                <input type="checkbox"
+                       name={source}
+                        checked={selectedSources.includes(source)}
+                        onChange={sourceChangeHandler} />
+                {source} ({count})
+              </label>
+          ))}
+        </div>
         <button className="main-btn"
                 onClick={next}>
           {

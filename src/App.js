@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 const version = '2.0';
 const Papa = require('papaparse');
@@ -10,6 +10,38 @@ function App() {
   const [selectedSources, setSelectedSources] = useState([]);
   const [current, setCurrent] = useState(null);
   const [shown, setShown] = useState(false);
+
+  const extractSources = useCallback((data) => {
+    const sources = {}
+    data.forEach(([, , , source]) => {
+      const safeSource = getSafeSource(source);
+      if(!(safeSource in sources)) {
+        sources[safeSource] = 0;
+      }
+      sources[safeSource]++;
+    });
+    return sources;
+  }, []);
+
+  const  filterData = useCallback((data, selectedSources) => {
+    if(!selectedSources.length) {
+      selectedSources = Object.keys(sources);
+    }
+    const map = data.reduce((acc, [eng, geo, comment, source]) => {
+      if (!selectedSources.includes(getSafeSource(source))) {
+        return acc;
+      }
+      if (eng && geo) {
+        if (!acc[geo]) {
+          acc[geo] = [];
+        }
+        acc[geo].push({eng, geo, comment, source: getSafeSource(source)});
+      }
+      return acc;
+    }, {});
+    setFiltered(map);
+  }, [sources]);
+
 
   useEffect(() => {
     // load csv file
@@ -29,42 +61,13 @@ function App() {
       setSources(sources);
       setSelectedSources(Object.keys(sources));
     }
-  }, []);
+  }, [extractSources]);
 
   useEffect(() => {
     filterData(data, selectedSources);
-  }, [selectedSources, data])
+  }, [selectedSources, data, filterData])
 
-  function extractSources(data) {
-    const sources = {}
-    data.forEach(([, , , source]) => {
-      const safeSource = getSafeSource(source);
-      if(!(safeSource in sources)) {
-        sources[safeSource] = 0;
-      }
-      sources[safeSource]++;
-    });
-    return sources;
-  }
 
-  function filterData(data, selectedSources) {
-    if(!selectedSources.length) {
-      selectedSources = sources;
-    }
-    const map = data.reduce((acc, [eng, geo, comment, source]) => {
-      if (!selectedSources.includes(getSafeSource(source))) {
-        return acc;
-      }
-      if (eng && geo) {
-        if (!acc[geo]) {
-          acc[geo] = [];
-        }
-        acc[geo].push({eng, geo, comment, source: getSafeSource(source)});
-      }
-      return acc;
-    }, {});
-    setFiltered(map);
-  }
 
   function getSafeSource(source) {
     return source || 'vano';

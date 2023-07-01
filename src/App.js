@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 
-const version = '2.0';
+const version = '2.1';
 const Papa = require('papaparse');
 
 function App() {
@@ -12,10 +12,10 @@ function App() {
   const [shown, setShown] = useState(false);
 
   const extractSources = useCallback((data) => {
-    const sources = {}
+    const sources = {};
     data.forEach(([, , , source]) => {
       const safeSource = getSafeSource(source);
-      if(!(safeSource in sources)) {
+      if (!(safeSource in sources)) {
         sources[safeSource] = 0;
       }
       sources[safeSource]++;
@@ -23,8 +23,8 @@ function App() {
     return sources;
   }, []);
 
-  const  filterData = useCallback((data, selectedSources) => {
-    if(!selectedSources.length) {
+  const filterData = useCallback((data, selectedSources) => {
+    if (!selectedSources.length) {
       selectedSources = Object.keys(sources);
     }
     const map = data.reduce((acc, [eng, geo, comment, source]) => {
@@ -41,7 +41,6 @@ function App() {
     }, {});
     setFiltered(map);
   }, [sources]);
-
 
   useEffect(() => {
     // load csv file
@@ -65,9 +64,7 @@ function App() {
 
   useEffect(() => {
     filterData(data, selectedSources);
-  }, [selectedSources, data, filterData])
-
-
+  }, [selectedSources, data, filterData]);
 
   function getSafeSource(source) {
     return source || 'vano';
@@ -93,7 +90,7 @@ function App() {
     } else {
       setSelectedSources(selectedSources.filter(s => s !== source));
     }
-  }
+  };
 
   return (
       <div style={{padding: '2rem'}}>
@@ -102,8 +99,8 @@ function App() {
               <label key={source} className="source-checkbox">
                 <input type="checkbox"
                        name={source}
-                        checked={selectedSources.includes(source)}
-                        onChange={sourceChangeHandler} />
+                       checked={selectedSources.includes(source)}
+                       onChange={sourceChangeHandler}/>
                 {source} ({count})
               </label>
           ))}
@@ -120,7 +117,7 @@ function App() {
                 {current[0].geo}
                 {current.length > 1 && ` (x${current.length})`}
               </h2>
-              <hr />
+              <hr/>
               {
                   shown && (
                       <ul>

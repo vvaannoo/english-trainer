@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 
-const version = '2.2';
+const version = '2.3';
 const Papa = require('papaparse');
 
 function App() {
@@ -108,7 +108,7 @@ function App() {
         <button className="main-btn"
                 onClick={next}>
           {
-            !current ? 'Start' : shown ? 'Next' : 'Show Translation'
+            !current ? 'Start' : shown ? 'Next' : 'Show'
           }
         </button>
         {current && (

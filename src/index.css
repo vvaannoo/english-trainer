@@ -21,22 +21,22 @@ code {
 button {
     border-radius: 0.5rem;
     border: none;
-    background: #333;
+    background: #735cf3;
     color: white;
     box-shadow: black 0 0 7px -2px;
 }
 
 button:focus {
-    outline: 3px solid #111;
+    outline: 3px solid #5e49c5;
 }
 
 button:hover {
-    background: #444;
+    background: #7c65f3;
 }
 
 button:active {
-    background: #313131;
-    box-shadow: black 0 0 7px -3px;
+    background: #7c65f3;
+    box-shadow: #332770 0 0 7px -3px;
 }
 
 hr {
@@ -52,12 +52,13 @@ hr {
 @media (max-width: 768px) {
     .main-btn {
         height: 10rem;
-        width: calc(100% - 6rem);
+        width: 10rem;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         margin: 3rem auto;
+        border-radius: 50%;
     }
 }
 
@@ -68,6 +69,8 @@ hr {
 .source-checkbox {
     display: flex;
     margin-right: 1rem;
+    font-size: 80%;
+    align-items: center;
 }
 
 

@@ -13,6 +13,14 @@ body {
     box-sizing: border-box;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+}
+
+ul {
+    padding-left: 1rem;
+}
+
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -27,7 +35,7 @@ button {
 }
 
 button:focus {
-    outline: 3px solid #5e49c5;
+    outline: 4px solid #5e49c5;
 }
 
 button:hover {
@@ -43,27 +51,40 @@ hr {
     border: 1px solid #444;
 }
 
-.main-btn {
-    margin-top: 1rem;
-    padding: 1rem 4rem;
-    margin-bottom: 1rem;
+.btn-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 1rem;
+    width: 100%;
+    max-width: 40rem;
 }
 
-@media (max-width: 768px) {
-    .main-btn {
-        height: 10rem;
-        width: 10rem;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: 3rem auto;
-        border-radius: 50%;
-    }
+.back-btn, .placeholder-btn {
+    border-radius: 50%;
+    height: 5rem;
+    width: 5rem;
+    opacity: 0.5;
+    background: #5d5d5d;
+}
+
+.placeholder-btn {
+    visibility: hidden;
+}
+
+.main-btn {
+    height: 10rem;
+    width: 10rem;
+    border-radius: 50%;
 }
 
 .sources {
-    display:flex;
+    display: flex;
 }
 
 .source-checkbox {

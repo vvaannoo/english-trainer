@@ -8,8 +8,9 @@ function App() {
   const [filtered, setFiltered] = useState({});
   const [sources, setSources] = useState({});
   const [selectedSources, setSelectedSources] = useState([]);
-  const [current, setCurrent] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(-1);
   const [shown, setShown] = useState(false);
+  const [history, setHistory] = useState([]);
 
   const extractSources = useCallback((data) => {
     const sources = {};
@@ -71,7 +72,7 @@ function App() {
   }
 
   const next = () => {
-    if (!shown && current) {
+    if (!shown && history.length) {
       setShown(true);
       return;
     }
@@ -79,8 +80,13 @@ function App() {
     const size = keys.length;
     const index = Math.floor(Math.random() * size);
     const geo = keys[index];
-    setCurrent(filtered[geo]);
+    // setCurrent(filtered[geo]);
+    setHistory((prev) => [...prev, filtered[geo]]);
+    setCurrentIndex((prev) => prev + 1);
     setShown(false);
+  };
+  const prev = () => {
+    setCurrentIndex((prev) => Math.max(0, prev - 1));
   };
 
   const sourceChangeHandler = (event) => {
@@ -91,6 +97,8 @@ function App() {
       setSelectedSources(selectedSources.filter(s => s !== source));
     }
   };
+
+  const current = history[currentIndex];
 
   return (
       <div style={{padding: '2rem'}}>
@@ -105,12 +113,7 @@ function App() {
               </label>
           ))}
         </div>
-        <button className="main-btn"
-                onClick={next}>
-          {
-            !current ? 'Start' : shown ? 'Next' : 'Show'
-          }
-        </button>
+
         {current && (
             <div>
               <h2>
@@ -132,6 +135,21 @@ function App() {
               }
             </div>
         )}
+
+        <div className="btn-group">
+          <button className="back-btn"
+                  disabled={currentIndex < 1}
+                  onClick={prev}>
+            Prev
+          </button>
+          <button className="main-btn"
+                  onClick={next}>
+            {
+              !current ? 'Start' : shown ? 'Next' : 'Show'
+            }
+          </button>
+          <button className="placeholder-btn"></button>
+        </div>
       </div>
   );
 }

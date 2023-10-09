@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 
-const version = '2.6';
+const version = '2.7';
 const Papa = require('papaparse');
 
 function App() {
